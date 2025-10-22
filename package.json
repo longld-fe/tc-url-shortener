@@ -1,5 +1,6 @@
 {
   "name": "tc-url-shortener",
+  "homepage": "https://longld-fe.github.io/tc-url-shortener",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,7 +9,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "predeploy": "bun run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -18,6 +21,7 @@
     "@tanstack/router-devtools": "^1.133.22",
     "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",
+    "gh-pages": "^6.3.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.65.0",
