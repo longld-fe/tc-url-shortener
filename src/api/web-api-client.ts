@@ -5,25 +5,25 @@ import type {
   AxiosResponse,
   AxiosError,
 } from "axios";
-import type { ApiError, ApiResponse } from "../types/common";
+import type { ApiError } from "../types/common";
 
-// Create axios instance with base configuration
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    "https://url-shortener-service.p.rapidapi.com",
   headers: {
     "Content-Type": "application/json",
+    "X-RapidAPI-Key": "c714f15a4fmsh834b9c29cf34deap1d7308jsned36279fefe2",
+    "X-RapidAPI-Host": "url-shortener-service.p.rapidapi.com",
   },
-  withCredentials: true,
 });
 
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    // TODO: Add authentication token to headers
     return config;
   },
   (error: AxiosError) => {
-    console.error("❌ Request Error:", error);
     return Promise.reject(error);
   }
 );
@@ -35,11 +35,6 @@ axiosInstance.interceptors.response.use(
   },
   (error: AxiosError) => {
     const apiError = handleApiError(error);
-
-    // TODO: Handle authentication errors
-    // TODO: Handle authorization errors
-
-    console.error("❌ API Error:", apiError);
     return Promise.reject(apiError);
   }
 );
@@ -85,12 +80,9 @@ export class WebApiClient {
    * @param config - Optional axios config
    * @returns Promise with the response data
    */
-  async get<T>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const response = await this.instance.get<ApiResponse<T>>(url, config);
+      const response = await this.instance.get<T>(url, config);
       return response.data;
     } catch (error) {
       throw error as ApiError;
@@ -108,13 +100,9 @@ export class WebApiClient {
     url: string,
     data?: D,
     config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
+  ): Promise<T> {
     try {
-      const response = await this.instance.post<ApiResponse<T>>(
-        url,
-        data,
-        config
-      );
+      const response = await this.instance.post<T>(url, data, config);
       return response.data;
     } catch (error) {
       throw error as ApiError;
@@ -132,13 +120,9 @@ export class WebApiClient {
     url: string,
     data?: D,
     config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
+  ): Promise<T> {
     try {
-      const response = await this.instance.put<ApiResponse<T>>(
-        url,
-        data,
-        config
-      );
+      const response = await this.instance.put<T>(url, data, config);
       return response.data;
     } catch (error) {
       throw error as ApiError;
@@ -151,12 +135,9 @@ export class WebApiClient {
    * @param config - Optional axios config
    * @returns Promise with the response data
    */
-  async delete<T>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const response = await this.instance.delete<ApiResponse<T>>(url, config);
+      const response = await this.instance.delete<T>(url, config);
       return response.data;
     } catch (error) {
       throw error as ApiError;

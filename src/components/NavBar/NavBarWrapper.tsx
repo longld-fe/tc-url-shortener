@@ -1,35 +1,12 @@
-import { useState, useRef, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import Logo from "../../assets/images/logo.svg";
 import { DesktopNav } from "./DesktopNav";
 import { MobileNav } from "./MobileNav";
+import { useToggleClick } from "../../hooks/useToggleClick";
+import { Button } from "../ui/Button/Button";
 
 export const NavBarWrapper = () => {
-  const [isNavMobileOpen, setIsNavMobileOpen] = useState(false);
-  const mobileNavRef = useRef<HTMLDivElement | null>(null);
-
-  const toggleNavMobile = () => setIsNavMobileOpen((prev) => !prev);
-
-  useEffect(() => {
-    if (!isNavMobileOpen) return;
-
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (
-        mobileNavRef.current &&
-        !mobileNavRef.current.contains(event.target as Node)
-      ) {
-        setIsNavMobileOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("touchstart", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [isNavMobileOpen]);
+  const { isOpen, toggle, close, ref } = useToggleClick<HTMLDivElement>();
 
   return (
     <header className="header flex items-center px-6 md:px-16 py-6 md:py-8 relative">
@@ -45,9 +22,10 @@ export const NavBarWrapper = () => {
 
       {/* Mobile Button */}
       <div className="nav-button block md:hidden ml-auto">
-        <button
+        <Button
+          variant="secondary"
           type="button"
-          onClick={toggleNavMobile}
+          onClick={toggle}
           aria-label="Open navigation menu"
         >
           <svg
@@ -58,16 +36,11 @@ export const NavBarWrapper = () => {
           >
             <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
           </svg>
-        </button>
+        </Button>
       </div>
 
       {/* Mobile Nav */}
-      {isNavMobileOpen && (
-        <MobileNav
-          ref={mobileNavRef}
-          onClose={() => setIsNavMobileOpen(false)}
-        />
-      )}
+      {isOpen && <MobileNav ref={ref} onClose={close} />}
     </header>
   );
 };

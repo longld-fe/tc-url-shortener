@@ -1,12 +1,17 @@
-const Home = () => {
+import { GettingStarted } from "../components/Home/GettingStarted";
+import HeroSection from "../components/Home/HeroSection";
+import { Statistic } from "../components/Home/Statistics";
+import { UrlShortener } from "../components/Home/UrlShortener";
+import { Footer } from "../components/ui/Footer";
+
+export const Home = () => {
   return (
-    <div className="p-2">
-      <h3 className="text-2xl font-bold mb-4">Welcome to URL Shortener!</h3>
-      <p className="text-gray-600">
-        This is the home page of your URL shortener application.
-      </p>
+    <div className="min-h-screen bg-gray-50">
+      <HeroSection />
+      <UrlShortener />
+      <Statistic />
+      <GettingStarted />
+      <Footer />
     </div>
   );
 };
-
-export default Home;
